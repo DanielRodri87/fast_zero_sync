@@ -57,8 +57,29 @@ def test_update_user(client):
     }
 
 
+def test_update_user_not_found(client):
+    response = client.put(
+        '/users/999',
+        json={
+            'username': 'test_username',
+            'email': 'email@test.com',
+            'password': 'test_password',
+        },
+    )
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json() == {'detail': 'User not found'}
+
+
 def test_delete_user(client):
     response = client.delete('/users/1')
 
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {'message': 'User deleted'}
+
+
+def test_delete_user_not_found(client):
+    response = client.delete('/users/999')
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json() == {'detail': 'User not found'}
